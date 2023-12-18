@@ -16,6 +16,7 @@ const onChangeSelect = (event) => filter.sortBy = event.target.value
 const onChangeInput = (event) => filter.searchQuery = event.target.value
 
 watch(filter, storeGoods.getGoods)
+watch(goods,storeFavorites.getGoods, {deep: true})
 
 onMounted(async () => {
     await storeGoods.getGoods()

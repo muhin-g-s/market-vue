@@ -3,16 +3,15 @@ import DrawerHeader from './DrawerHeader.vue'
 import CartListItem from './CartListItem.vue'
 import InfoBlock from './InfoBlock.vue'
 import { useCartStore } from '../store/cart'
-import { reactive, ref, watch } from 'vue'
+import { computed } from 'vue'
 
 const storeCart = useCartStore()
 
-//let totalPrice = ref(storeCart.cart.reduce((acc, item) => acc + item.price, 0))
+const totalPrice = computed(() => storeCart.totalPrice())
 
 const createOrderHandler = () => {
     console.log("click")
     storeCart.createOrder()
-    // totalPrice.value = 0
 }
 
 </script>
@@ -22,7 +21,7 @@ const createOrderHandler = () => {
     <div class="bg-slate-200 w-96 h-full fixed right-0 top-0 z-20 p-8">
         <DrawerHeader/>
 
-        <div class="flex h-full items-center" v-if="!storeCart.totalPrice()" >
+        <div class="flex h-full items-center" v-if="!totalPrice" >
             <InfoBlock 
                 title="Корзина пустая" 
                 description="Добавьте хотя бы одну пару кроссовок, чтобы сделать заказ."
@@ -30,19 +29,19 @@ const createOrderHandler = () => {
             />
         </div>
 
-        <CartListItem v-if="storeCart.totalPrice()"/>
+        <CartListItem v-if="totalPrice"/>
 
         <div 
-            v-if="storeCart.totalPrice()" 
+            v-if="totalPrice" 
             class="flex items-center gap-3 mb-6 my-6"
         >
             <span>Итого:</span>
             <div class="flex-1 border-b border-slate-300 mt-1"></div>
-            <b>{{ storeCart.totalPrice() }} руб</b>
+            <b>{{ totalPrice }} руб</b>
         </div>
 
         <button 
-            v-if="storeCart.totalPrice()"
+            v-if="totalPrice"
             :disabled="totalPrice ? false : true" 
             @click="createOrderHandler" 
             class="bg-slate-800 hover:bg-slate-950 active:bg-slate-700 disabled:bg-slate-600 transition 

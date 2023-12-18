@@ -30,6 +30,10 @@ export const useGoodsStore = defineStore('goods', {
             } catch (error) {
                 console.log(error)
             }
-      }
+        },
+
+        // setGoods(modArray) {
+        //     this.goods = modArray
+        // }
     }
 })

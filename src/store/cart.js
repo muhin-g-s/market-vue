@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { postOrder } from '../api'
+import { useGoodsStore } from './goods';
 
 export const useCartStore = defineStore('cart', {
     state: () => ({
@@ -28,6 +29,12 @@ export const useCartStore = defineStore('cart', {
                     cart: this.cart,
                     totalPrice: this.totalPrice()
                 })
+                const {goods} = useGoodsStore()
+
+                goods.forEach(element => {
+                  element.isAdded = false  
+                })
+
                 this.cart = []
                 localStorage.setItem("cart", JSON.stringify(this.cart))
             } catch (error) {
