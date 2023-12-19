@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, reactive, watch } from "vue"
+import { onMounted, watch, reactive } from "vue"
 import { useGoodsStore } from "../store/goods"
 import { useFavoritesStore } from "../store/favorites"
 import { useCartStore } from "../store/cart"
@@ -9,48 +9,15 @@ const storeGoods     = useGoodsStore()
 const storeFavorites = useFavoritesStore()
 const storeCart      = useCartStore()
 
-const goods = reactive(storeGoods.goods)
 const filter = reactive(storeGoods.params)
 
 const onChangeSelect = (event) => filter.sortBy = event.target.value
 const onChangeInput = (event) => filter.searchQuery = event.target.value
 
 watch(filter, storeGoods.getGoods)
-watch(goods,storeFavorites.getGoods, {deep: true})
 
-onMounted(async () => {
-    await storeGoods.getGoods()
-    await storeFavorites.getFavorites()
+onMounted(storeGoods.getGoods)
 
-    const favorites = storeFavorites.favorites
-
-    goods.value = goods.value.map(item => {
-        const favorite = favorites.find(favorite => favorite.parrentId === item.id)
-
-        if (!favorite) {
-            return item
-        }
-
-        return {
-            ...item,
-            isFavorite: true,
-            favoriteId: favorite.id
-        }
-    })
-
-    goods.value = goods.value.map(item => ({
-        ...item,
-        isAdded: storeCart.cart.some(cartItem => cartItem.id === item.id)
-    }))
-})
-
-const addToFavorite = (item) => {
-    storeFavorites.addFavorites(item)
-}
-
-const addToCart = (item) => {
-    storeCart.addCart(item)
-}
 </script>
 
 
@@ -75,5 +42,5 @@ const addToCart = (item) => {
 
     </div>
 
-    <CardList :items="goods.value" @add-to-favorite="addToFavorite" @add-to-cart="addToCart" />
+    <CardList :items="storeGoods.goods" @add-to-favorite="storeFavorites.addFavorites" @add-to-cart="storeCart.addCart" />
 </template>

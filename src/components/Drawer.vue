@@ -3,21 +3,18 @@ import DrawerHeader from './DrawerHeader.vue'
 import CartListItem from './CartListItem.vue'
 import InfoBlock from './InfoBlock.vue'
 import { useCartStore } from '../store/cart'
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
+
+const {drawerSetClose} = inject('cart')
 
 const storeCart = useCartStore()
 
 const totalPrice = computed(() => storeCart.totalPrice())
 
-const createOrderHandler = () => {
-    console.log("click")
-    storeCart.createOrder()
-}
-
 </script>
 
 <template>
-    <div class="fixed top-0 left-0 h-full w-full bg-black z-10 opacity-70"></div>
+    <div @click="drawerSetClose" class="fixed top-0 left-0 h-full w-full bg-black z-10 opacity-70"></div>
     <div class="bg-slate-200 w-96 h-full fixed right-0 top-0 z-20 p-8">
         <DrawerHeader/>
 
@@ -29,7 +26,7 @@ const createOrderHandler = () => {
             />
         </div>
 
-        <CartListItem v-if="totalPrice"/>
+        <CartListItem v-if="totalPrice" @deleteItem="storeCart.deleteCart"/>
 
         <div 
             v-if="totalPrice" 
@@ -43,7 +40,7 @@ const createOrderHandler = () => {
         <button 
             v-if="totalPrice"
             :disabled="totalPrice ? false : true" 
-            @click="createOrderHandler" 
+            @click="storeCart.createOrder" 
             class="bg-slate-800 hover:bg-slate-950 active:bg-slate-700 disabled:bg-slate-600 transition 
             text-slate-50 text-bold w-full rounded-xl py-2 cursor-pointer"
         >

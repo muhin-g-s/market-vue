@@ -1,11 +1,12 @@
 <script setup>
-import { useCartStore } from '../store/cart'
+import { useCartStore } from '@/store/cart'
 import CartItem from './CartItem.vue'
 
 const { cart } = useCartStore()
 
-</script>
+const emit = defineEmits(['deleteItem'])
 
+</script>
 
 <template>
     <div class="flex flex-col gap-2" v-auto-animate>
@@ -16,7 +17,7 @@ const { cart } = useCartStore()
             :title="item.title"
             :price="item.price"
 
-            @delete-item="() => deleteItem(item)"
+            @deleteItem="() => emit('deleteItem', item)"
         />
     </div>
 </template>

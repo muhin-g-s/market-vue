@@ -19,6 +19,11 @@ export const useCartStore = defineStore('cart', {
             localStorage.setItem("cart", JSON.stringify(this.cart))    
         },
 
+        deleteCart (item) {
+            this.cart.splice(this.cart.indexOf(item), 1)
+            item.isAdded = false
+            localStorage.setItem("cart", JSON.stringify(this.cart))
+        },
         totalPrice () {
             return this.cart.reduce((acc, item) => acc + item.price, 0)
         },
