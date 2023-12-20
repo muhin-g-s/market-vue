@@ -37,8 +37,7 @@ export const useGoodsStore = defineStore('goods', {
 
                     if (!favorite) {
                         return item
-                    }
-
+                    }  
                     return {
                         ...item,
                         isFavorite: true,

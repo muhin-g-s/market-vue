@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 
 import { getFavorites, postFavorite, deleteFavorite } from '../api'
+import { useCartStore } from './cart';
 
 export const useFavoritesStore = defineStore('favorites', {
     state: () => ({
@@ -10,9 +11,12 @@ export const useFavoritesStore = defineStore('favorites', {
         async getFavorites () {
             try {
                 const data = await getFavorites()
+                const storeCart = useCartStore()
+
                 this.favorites = data.map(item => ({
                     ...item,
-                    isFavorite: true
+                    isFavorite: true,
+                    isAdded: storeCart.cart.some(cartItem => cartItem.id === item.parrentId)
                 }))
             } catch (error) {
                 console.log(error)
